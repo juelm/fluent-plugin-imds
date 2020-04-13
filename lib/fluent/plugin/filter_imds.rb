@@ -22,7 +22,7 @@ module Fluent
     class ImdsFilter < Fluent::Plugin::Filter
       Fluent::Plugin.register_filter("imds", self)
 
-      config_param :test, :bool, :default => false
+      config_param :test, :bool, :default => true
 
       def stripKVPValue(unstrippedString)
         reachedStartOfContainerId = false

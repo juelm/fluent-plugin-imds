@@ -29,7 +29,7 @@ class ImdsFilterTest < Test::Unit::TestCase
   	  'Metadata'=>'true',
   	  'User-Agent'=>'Ruby'
       }).
-    to_return(Net::HTTPResponse.new(1.0, 200, "OK"))
+    to_return(status: 200, body: "", headers: {})
     d = create_driver(conf = '')
     d.run do
       d.feed("test1", @time, {"Matt says" => "Hello"})
