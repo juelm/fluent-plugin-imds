@@ -34,7 +34,8 @@ class ImdsFilterTest < Test::Unit::TestCase
     d.run do
       d.feed("test1", @time, {"Matt says" => "Hello"})
     end
-    assert_equal(d.filtered_records[0], {"Matt says" => "Hello"})
+    assert_equal(d.filtered_records[0]["Matt says"], "Hello")
+    assert_equal(d.filtered_records[0]["subscriptionId"], "6748d8b1-3c1e-440e-8560-555f9747fe1f")
       
   end
 
