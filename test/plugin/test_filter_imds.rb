@@ -29,15 +29,15 @@ class ImdsFilterTest < Test::Unit::TestCase
   	  'Metadata'=>'true',
   	  'User-Agent'=>'Ruby'
       }).
-    to_return(status: 200, body: "", headers: {})
+    to_return(status: 200, body: "{\"compute\":{\"subscriptionId\":\"0000a0a0-0a0a-000a-0000-000a000aa0a\", \"location\":\"eastus\", \"resourceGroupName\":\"test-resource-group\"}}", headers: {})
     d = create_driver(conf = '')
     d.run do
       d.feed("test1", @time, {"Matt says" => "Hello"})
     end
     assert_equal(d.filtered_records[0]["Matt says"], "Hello")
-    assert_equal(d.filtered_records[0]["subscriptionId"], "")
+    assert_equal(d.filtered_records[0]["subscriptionId"], "0000a0a0-0a0a-000a-0000-000a000aa0a")
     assert_equal(d.filtered_records[0]["region"], "eastus")
-    assert_equal(d.filtered_records[0]["resourceGroup"], "juelm-imds-fluentd")
+    assert_equal(d.filtered_records[0]["resourceGroup"], "test-resource-group")
       
   end
 
