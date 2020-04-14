@@ -22,13 +22,16 @@ module Fluent
     class ImdsFilter < Fluent::Plugin::Filter
       Fluent::Plugin.register_filter("imds", self)
 
-      config_param :test, :bool, :default => false
+      #The filter obtains ContainerId via HyperV key/value pair data exchange.
+      #If tests are run outside of Azure the call to get containerId will throw an error
+      #pass a string to containerIdInput to avoid this
+      config_param :containerIdInput, :string, :default => ""
 
       def stripKVPValue(unstrippedString)
         reachedStartOfContainerId = false
         containerID = ""
         unstrippedString.each_char {|c|
-            if c == "\u0000"
+            if c == "\u0000" 
                 if reachedStartOfContainerId
                     return containerID
                 end
@@ -60,7 +63,7 @@ module Fluent
           data = JSON.parse(response.body)
         else
           #Is there anything else we should include if IMDS fails.  Maybe VMName from kvp_pool?
-          record["IMDS Error"] = "IMDS Request failed"
+          record["IMDSError"] = "IMDS Request failed with error #{response.code}: #{Net::HTTPResponse::CODE_TO_OBJ["#{response.code}"]}"
           return record
         end
 
@@ -79,9 +82,13 @@ module Fluent
         # record["distroVersion"] = unstrippedVersion.strip
         # unstrippedKernel = `uname -r`
         # record["kernelVersion"] = unstrippedKernel.strip
-        # unstrippedContainerId = `cat /var/lib/hyperv/.kvp_pool_3 | sed -e 's/^.*VirtualMachineName//'      `
-        # strippedContainerId = stripKVPValue(unstrippedContainerId)
-        # record["containerID"] = strippedContainerId
+        if(@containerIdInput)
+          unstrippedContainerId = @containerIdInput
+        else
+          unstrippedContainerId = `cat /var/lib/hyperv/.kvp_pool_3 | sed -e 's/^.*VirtualMachineName//'`
+        end
+        strippedContainerId = stripKVPValue(unstrippedContainerId)
+        record["containerID"] = strippedContainerId
 
         record
       end
