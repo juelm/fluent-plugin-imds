@@ -63,5 +63,4 @@ class ImdsFilterTest < Test::Unit::TestCase
     assert_equal(d.filtered_records[0]["Matt says"], "Hello")
     assert_equal(d.filtered_records[0]["IMDSError"], "IMDS Request failed with error #{error}: #{message}")
   end
-
 end
