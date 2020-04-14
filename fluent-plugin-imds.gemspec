@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Filter plugin to add Azure IMDS metadata to logs emitted}
   spec.description   = spec.summary
-  spec.homepage      = "https://github.com/juelm/fluent-plugin-filter_imds"
+  spec.homepage      = "https://github.com/juelm/fluent-plugin-imds"
   spec.license       = "MIT"
 
   test_files, files  = `git ls-files -z`.split("\x0").partition do |f|
