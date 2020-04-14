@@ -80,10 +80,10 @@ module Fluent
         record["distroVersion"] = unstrippedVersion.strip
         unstrippedKernel = `uname -r`
         record["kernelVersion"] = unstrippedKernel.strip
-        if(@containerIdInput)
-          unstrippedContainerId = @containerIdInput
-        else
+        if(@containerIdInput == "")
           unstrippedContainerId = `cat /var/lib/hyperv/.kvp_pool_3 | sed -e 's/^.*VirtualMachineName//'`
+        else
+          unstrippedContainerId = @containerIdInput
         end
         strippedContainerId = stripKVPValue(unstrippedContainerId)
         record["containerID"] = strippedContainerId
