@@ -24,9 +24,10 @@ module Fluent
 
       #The filter obtains ContainerId via HyperV key/value pair data exchange.
       #If tests are run outside of Azure the call to get containerId will throw an error
-      #pass a string to containerIdInput to avoid this
+      #pass a string to containerIdInput to avoid this (e.g. for testing)
       config_param :containerIdInput, :string, :default => ""
 
+      #Method to format value retrieved from HyperV key/value pair data exchange
       def stripKVPValue(unstrippedString)
         reachedStartOfContainerId = false
         containerID = ""
