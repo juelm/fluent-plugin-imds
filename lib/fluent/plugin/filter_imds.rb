@@ -86,12 +86,12 @@ module Fluent
         record["vmSize"] = data["compute"]["vmSize"]
         record["vmId"] = data["compute"]["vmId"]
         record["placementGroup"] = data["compute"]["placementGroupId"]
-        # unstrippedDistro = `lsb_release -si`
-        # record["distro"] = unstrippedDistro.strip
-        # unstrippedVersion = `lsb_release -sr`
-        # record["distroVersion"] = unstrippedVersion.strip
-        # unstrippedKernel = `uname -r`
-        # record["kernelVersion"] = unstrippedKernel.strip
+        unstrippedDistro = `lsb_release -si`
+        record["distro"] = unstrippedDistro.strip
+        unstrippedVersion = `lsb_release -sr`
+        record["distroVersion"] = unstrippedVersion.strip
+        unstrippedKernel = `uname -r`
+        record["kernelVersion"] = unstrippedKernel.strip
         if(@containerIdInput)
           unstrippedContainerId = @containerIdInput
         else
