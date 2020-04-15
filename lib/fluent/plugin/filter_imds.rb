@@ -45,8 +45,7 @@ module Fluent
         containerID
       end
 
-      def filter(tag, time, record)
-
+      def fetchIMDS()
         uri = URI.parse("http://169.254.169.254/metadata/instance?api-version=2019-11-01")
         request = Net::HTTP::Get.new(uri)
         request["Metadata"] = "true"
@@ -60,12 +59,25 @@ module Fluent
         end
 
         if response.is_a?(Net::HTTPSuccess) 
-          data = JSON.parse(response.body)
-        else
-          #Is there anything else we should include if IMDS fails.  Maybe VMName from kvp_pool?
-          record["IMDSError"] = "IMDS Request failed with error #{response.code}: #{Net::HTTPResponse::CODE_TO_OBJ["#{response.code}"]}"
-          return record
+          @IMDS = JSON.parse(response.body)
         end
+      end
+
+      def start
+        super
+        @IMDS = {"compute" => {"subscriptionId" => "",
+                               "location" => "",
+                               "resourceGroupName" => "",
+                               "name" => "",
+                               "vmSize" => "",
+                               "vmId" => "",
+                               "placementGroupId" => ""}}
+        fetchIMDS()
+      end
+
+      def filter(tag, time, record)
+
+        data = @IMDS
 
         record["subscriptionId"] = data["compute"]["subscriptionId"]
         record["region"] = data["compute"]["location"]
@@ -74,12 +86,12 @@ module Fluent
         record["vmSize"] = data["compute"]["vmSize"]
         record["vmId"] = data["compute"]["vmId"]
         record["placementGroup"] = data["compute"]["placementGroupId"]
-        unstrippedDistro = `lsb_release -si`
-        record["distro"] = unstrippedDistro.strip
-        unstrippedVersion = `lsb_release -sr`
-        record["distroVersion"] = unstrippedVersion.strip
-        unstrippedKernel = `uname -r`
-        record["kernelVersion"] = unstrippedKernel.strip
+        # unstrippedDistro = `lsb_release -si`
+        # record["distro"] = unstrippedDistro.strip
+        # unstrippedVersion = `lsb_release -sr`
+        # record["distroVersion"] = unstrippedVersion.strip
+        # unstrippedKernel = `uname -r`
+        # record["kernelVersion"] = unstrippedKernel.strip
         if(@containerIdInput)
           unstrippedContainerId = @containerIdInput
         else

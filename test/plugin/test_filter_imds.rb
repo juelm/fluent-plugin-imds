@@ -82,6 +82,13 @@ class ImdsFilterTest < Test::Unit::TestCase
       d.feed("test1", @time, {"Matt says" => "Hello"})
     end
     assert_equal(d.filtered_records[0]["Matt says"], "Hello")
-    assert_equal(d.filtered_records[0]["IMDSError"], "IMDS Request failed with error #{error}: #{message}")
+    assert_equal(d.filtered_records[0]["subscriptionId"], "")
+    assert_equal(d.filtered_records[0]["region"], "")
+    assert_equal(d.filtered_records[0]["resourceGroup"], "")
+    assert_equal(d.filtered_records[0]["vmName"], "")
+    assert_equal(d.filtered_records[0]["vmSize"], "")
+    assert_equal(d.filtered_records[0]["vmId"], "")
+    assert_equal(d.filtered_records[0]["placementGroup"], "") 
+    assert_equal(d.filtered_records[0]["containerID"], "a0a000a0-0000-0a00-aaa0-aaaa00aa0a00")
   end
 end
